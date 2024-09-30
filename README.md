@@ -22,6 +22,8 @@ Este proyecto implementa un grafo dirigido ponderado con múltiples funcionalida
 ## Documentación del Diseño del Algoritmo y Decisiones de Optimización
 
 ### Algoritmo de Detección y Eliminación de Ciclos Negativos
+Hice uso de una modificación del algoritmo Bellman-Ford llamada SPFA (Single-Source Shortest Path First) ya que las instrucciones era poder detectar ciclos negativos y eliminarlos, junto con esto debía trabajar con grafos muy grandes, por lo cual entre muchos algoritmos como Dijkstra, Johnson, o D'Esopo-Pape, etcétera, decidí utilizar el algoritmo SPFA con mejoras para conseguir el mejor rendimiento sin perder la eficacia del algoritmo.
+
 El método `removeNegativeCycles` implementa una variante del algoritmo Bellman-Ford, los pasos son los siguientes:
 1. Inicializar distancias y predecesores.
 2. Relajar aristas múltiples veces y detectar ciclos negativos si el número de actualizaciones excede un límite.
@@ -47,6 +49,23 @@ Implementé diversas pruebas unitarias usando `gtest` para comprobar:
 - El manejo de casos de entrada inválidos (`InvalidInputs`).
 
 Este enfoque asegura la robustez del código y permite detectar y corregir errores de manera eficiente.
+
+Para realizar las pruebas, utilicé un servidor con las siguientes especificaciones:
+
+- **CPU**: Intel Xeon Scalable - 4 núcleos
+- **RAM**: 32 GB
+
+Este servidor está alojado en Google Cloud Platform (GCP) y cuenta con un procesador optimizado para tareas de alto rendimiento en entornos de servidor.
+
+#### Pruebas realizadas con Grafos
+
+|  Prueba | Descripción  | Resultado  | Ejecución |
+| ------------ | ------------ | ------------ | ---------- |
+| Grafo simple con tiempos| Grafo con una variación entre más costoso y menor tiempo, el algoritmo debe mostrar ambos resultados especificando cuál es más costoso y cuál tiene un tiempo reducido  | Pasa  | ./GraphMain 1 0 5 |
+| Grafo con ciclo nomal | El algoritmo debe validar que el grafo no tiene ningún ciclo negativo ya que la suma de los pesos es 1 en la prueba  | Pasa  | ./GraphMain 2 0 5 |
+| Grafo con un solo ciclo negativo  | Grafo de 10 nodos con un ciclo negativo del nodo 0 al 4, el algoritmo debe eliminar los nodos de 0 al 4 pero permitiendo ver las rutas del 5 al 9  | Pasa  | ./GraphMain 3 0 5   - ./GraphMain 3 5 10
+| Grafo de gran escala | El algoritmo debe poder procesar un grafo de 100 mil nodos y 1 millón de aristas para comprobar el rendimiento del mismo  | Pasa  | ./GraphMain 6 9584 10
+| Grafo sin diferencia de tiempo | El grafo no debe contar con diferencias en tiempos de entrega en ninguna ruta, permitiendo encontrar la mejor ruta de una manera tradicional sin contar el tiempo  | Pasa  | ./GraphMain 2 0 5
 
 ## Instrucciones de Ejecución
 
